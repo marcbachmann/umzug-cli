@@ -1,0 +1,22 @@
+{
+  "name": "umzug-cli",
+  "version": "1.0.0",
+  "description": "A cli factory for umzug, a migration library",
+  "main": "api.js",
+  "keywords": ["umzug", "migration", "cli"],
+  "scripts": {
+    "test": "standard && node test"
+  },
+  "author": "Marc Bachmann <marc.brookman@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "borderless-table": "^1.0.1",
+    "umzug": "^1.11.0",
+    "yargs-parser": "^2.4.1"
+  },
+  "devDependencies": {
+    "rimraf": "^2.5.4",
+    "standard": "^7.1.2",
+    "tape": "^4.6.0"
+  }
+}
