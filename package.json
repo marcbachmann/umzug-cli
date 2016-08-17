@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "description": "A cli factory for umzug, a migration library",
   "main": "api.js",
-  "keywords": ["umzug", "migration", "cli"],
+  "keywords": [
+    "umzug",
+    "migration",
+    "cli"
+  ],
   "scripts": {
     "test": "standard && node test"
   },
@@ -18,5 +22,16 @@
     "rimraf": "^2.5.4",
     "standard": "^7.1.2",
     "tape": "^4.6.0"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcbachmann/umzug-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/marcbachmann/umzug-cli/issues"
+  },
+  "homepage": "https://github.com/marcbachmann/umzug-cli#readme"
 }
