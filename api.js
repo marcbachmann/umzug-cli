@@ -104,8 +104,8 @@ function updown (stdout, umzug, type) {
     }
 
     return res.then(function (migrations) {
-      if (!migrations || !migrations.length) stdout.write('No migrations executed\n')
-      else table(migrations, ['file'], [`Executed '${type}' of the following files`], stdout)
+      if (!migrations || !migrations.length) return stdout.write('No migrations executed\n')
+      table(migrations, ['file'], [`Executed '${type}' of ${migrations.length} migrations`], stdout)
     })
   }
 }
