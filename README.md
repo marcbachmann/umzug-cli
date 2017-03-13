@@ -1,5 +1,7 @@
 # umzug-cli
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/marcbachmann/umzug-cli.svg)](https://greenkeeper.io/)
+
 A cli factory for umzug, a migration library
 
 1. Create a executable `migrate.js`
