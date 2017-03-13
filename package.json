@@ -16,11 +16,11 @@
   "dependencies": {
     "borderless-table": "^1.0.1",
     "umzug": "^1.11.0",
-    "yargs-parser": "^2.4.1"
+    "yargs-parser": "^5.0.0"
   },
   "devDependencies": {
     "rimraf": "^2.5.4",
-    "standard": "^8.6.0",
+    "standard": "^9.0.1",
     "tape": "^4.6.3"
   },
   "directories": {
