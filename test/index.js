@@ -160,6 +160,36 @@ test('.history', function (t) {
   })
 })
 
+test('.cli', function (t) {
+  t.plan(2)
+
+  t.test('with arg --help', function (t) {
+    const mig = createMigration('migrations/cli-test-1')
+    const origExit = process.exit
+    process.exit = function () {}
+    mig.api.cli(['--help'])
+    process.exit = origExit
+    const lines = mig.stdout.pop().split('\n')
+    t.equal(lines[0], 'Use: umzug-cli [command]')
+    t.end()
+  })
+
+  t.test('with arg pending', function (t) {
+    const mig = createMigration('migrations/cli-test-2')
+    mig.create('first.js', emptyMig)
+    mig.create('second.js', emptyMig)
+    mig.api.cli(['pending']).then(function () {
+      t.equal(mig.stdout.pop(), [
+        'Pending migrations',
+        '------------------',
+        'first.js          ',
+        'second.js         '
+      ].join('\n'))
+      t.end()
+    })
+  })
+})
+
 function createMigration (directory) {
   const migdir = path.join(__dirname, directory)
   const stdout = new BufferStream()
