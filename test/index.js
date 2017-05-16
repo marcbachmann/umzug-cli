@@ -1,15 +1,16 @@
-var path = require('path')
-var test = require('tape')
-var knexUmzugCli = require('../api')
-var util = require('util')
-var rimraf = require('rimraf').sync
-var mkdir = require('fs').mkdirSync
+const path = require('path')
+const test = require('tape')
+const knexUmzugCli = require('../api')
+const util = require('util')
+const rimraf = require('rimraf').sync
+const mkdir = require('fs').mkdirSync
+const emptyMig = 'module.exports = {up: () => undefined, down: () => undefined}'
 rimraf(path.join(__dirname, 'migrations'))
 mkdir(path.join(__dirname, 'migrations'))
 
 test('api', function (t) {
   t.plan(5)
-  var api = knexUmzugCli({})
+  const api = knexUmzugCli({})
 
   t.test('exposes a .up command', function (t) {
     t.plan(1)
@@ -38,18 +39,139 @@ test('api', function (t) {
 })
 
 test('.up', function (t) {
-  t.plan(1)
+  t.plan(2)
 
-  var mig1 = createMigration('migrations/up-test-1')
-  mig1.api.up().then(function () {
-    t.equal(mig1.stdout.pop(), 'No migrations executed\n', 'shows that no migrations got executed')
+  t.test('without migrations', function (t) {
+    const mig = createMigration('migrations/up-test-1')
+    mig.api.up().then(function () {
+      t.equal(mig.stdout.pop(), 'No migrations executed\n', 'shows that no migrations got executed')
+      t.end()
+    })
+  })
+
+  t.test('with migrations, executes all', function (t) {
+    const mig = createMigration('migrations/up-test-2')
+    mig.create('first.js', emptyMig)
+    mig.create('second.js', emptyMig)
+    mig.api.up().then(function () {
+      t.equal(mig.stdout.pop(), [
+        `Executed 'up' of 2 migrations`,
+        '-----------------------------',
+        'first.js                     ',
+        'second.js                    '
+      ].join('\n'))
+      t.end()
+    })
+  })
+})
+
+test('.down', function (t) {
+  t.plan(2)
+
+  t.test('without migrations', function (t) {
+    const mig = createMigration('migrations/down-test-1')
+    mig.api.down().then(function () {
+      t.equal(mig.stdout.pop(), 'No migrations executed\n', 'shows that no migrations got executed')
+      t.end()
+    })
+  })
+
+  t.test('with migrations, executes 1 at a time', function (t) {
+    const mig = createMigration('migrations/down-test-2')
+    mig.create('first.js', emptyMig)
+    mig.create('second.js', emptyMig)
+    mig.api.up().then(function () {
+      mig.stdout.length = 0
+
+      mig.api.down().then(function () {
+        const lines = mig.stdout.pop()
+        t.equal(lines, [
+          `Executed 'down' of 1 migrations`,
+          '-------------------------------',
+          'second.js                      '
+        ].join('\n'))
+
+        mig.api.down().then(function () {
+          t.equal(mig.stdout.pop(), [
+            `Executed 'down' of 1 migrations`,
+            '-------------------------------',
+            'first.js                       '
+          ].join('\n'))
+          t.end()
+        })
+      })
+    })
+  })
+})
+
+test('.pending', function (t) {
+  t.plan(2)
+
+  t.test('without migrations', function (t) {
+    const mig = createMigration('migrations/pending-test-1')
+    mig.api.pending().then(function () {
+      t.equal(mig.stdout.pop(), 'No pending migrations\n')
+      t.end()
+    })
+  })
+
+  t.test('with migrations', function (t) {
+    const mig = createMigration('migrations/pending-test-2')
+    mig.create('first.js', emptyMig)
+    mig.create('second.js', emptyMig)
+    mig.api.pending().then(function () {
+      t.equal(mig.stdout.pop(), [
+        'Pending migrations',
+        '------------------',
+        'first.js          ',
+        'second.js         '
+      ].join('\n'))
+      t.end()
+    })
+  })
+})
+
+test('.history', function (t) {
+  t.plan(2)
+
+  t.test('without migrations', function (t) {
+    const mig = createMigration('migrations/history-test-1')
+    mig.api.history().then(function () {
+      t.equal(mig.stdout.pop(), 'No executed migrations\n')
+      t.end()
+    })
+  })
+
+  t.test('with migrations', function (t) {
+    const mig = createMigration('migrations/history-test-2')
+    mig.create('first.js', emptyMig)
+    mig.create('second.js', emptyMig)
+    mig.api.up().then(function () {
+      mig.api.history().then(function () {
+        t.equal(mig.stdout.pop(), [
+          'Executed migrations',
+          '-------------------',
+          'first.js           ',
+          'second.js          '
+        ].join('\n'))
+        t.end()
+      })
+    })
   })
 })
 
 function createMigration (directory) {
-  var migdir = path.join(__dirname, directory)
-  var stdout = new BufferStream()
-  var api = knexUmzugCli({cli: {stdout: stdout}, migrations: {directory: migdir}})
+  const migdir = path.join(__dirname, directory)
+  const stdout = new BufferStream()
+  const api = knexUmzugCli({
+    cli: {stdout: stdout},
+    migrations: {
+      path: migdir,
+      pattern: /\.js$/
+    },
+    storage: 'json',
+    storageOptions: {path: path.join(migdir, 'state.json')}
+  })
   mkdir(migdir)
   return {
     api: api,

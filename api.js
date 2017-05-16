@@ -67,9 +67,8 @@ function createApi (stdout, umzug) {
     },
     pending: function () {
       return umzug.pending().then(function (migrations) {
-        migrations = migrations.map(function (mig) { return {file: mig.file} })
         if (!migrations.length) stdout.write('No pending migrations\n')
-        else table(migrations, null, ['Pending migrations'], stdout)
+        else table(migrations, ['file'], ['Pending migrations'], stdout)
       })
     },
     up: updown(stdout, umzug, 'up'),
