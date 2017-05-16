@@ -48,19 +48,22 @@ module.exports = function (opts) {
 function createApi (stdout, umzug) {
   return {
     history: function () {
-      if (typeof umzug.storage.history !== 'function') {
-        stdout.write("The current storage doesn't support a history.\n")
-        process.exit(1)
-        return
-      }
-
-      return umzug.storage.history().then(function (events) {
-        var lines = events.map(function (e) {
-          var time = new Date(e.time).toLocaleTimeString('en-us', {year: 'numeric', month: 'numeric', day: 'numeric'})
-          return Object.assign(e, {time: time})
+      if (typeof umzug.storage.history === 'function') {
+        return umzug.storage.history().then(function (events) {
+          if (!events.length) stdout.write('No executed migrations\n')
+          var lines = events.map(function (e) {
+            var time = new Date(e.time).toLocaleTimeString('en-us', {year: 'numeric', month: 'numeric', day: 'numeric'})
+            return Object.assign(e, {time: time})
+          })
+          table(lines, ['time', 'type', 'name', 'user', 'host'], null, stdout)
         })
-        table(lines, ['time', 'type', 'name', 'user', 'host'], null, stdout)
-      })
+      } else {
+        return umzug.storage.executed().then(function (migrations) {
+          migrations = migrations.map(mig => ({ file: mig }))
+          if (!migrations.length) stdout.write('No executed migrations\n')
+          else table(migrations, ['file'], ['Executed migrations'], stdout)
+        })
+      }
     },
     pending: function () {
       return umzug.pending().then(function (migrations) {
