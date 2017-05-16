@@ -15,7 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "borderless-table": "^1.0.1",
-    "umzug": "^1.11.0",
+    "umzug": "^2.0.0",
     "yargs-parser": "^2.4.1"
   },
   "devDependencies": {
