@@ -58,7 +58,7 @@ test('.up', function (t) {
         `Executed 'up' of 2 migrations`,
         '-----------------------------',
         'first.js                     ',
-        'second.js                    '
+        'second.js                    \n'
       ].join('\n'))
       t.end()
     })
@@ -88,14 +88,14 @@ test('.down', function (t) {
         t.equal(lines, [
           `Executed 'down' of 1 migrations`,
           '-------------------------------',
-          'second.js                      '
+          'second.js                      \n'
         ].join('\n'))
 
         mig.api.down().then(function () {
           t.equal(mig.stdout.pop(), [
             `Executed 'down' of 1 migrations`,
             '-------------------------------',
-            'first.js                       '
+            'first.js                       \n'
           ].join('\n'))
           t.end()
         })
@@ -124,7 +124,7 @@ test('.pending', function (t) {
         'Pending migrations',
         '------------------',
         'first.js          ',
-        'second.js         '
+        'second.js         \n'
       ].join('\n'))
       t.end()
     })
@@ -152,7 +152,7 @@ test('.history', function (t) {
           'Executed migrations',
           '-------------------',
           'first.js           ',
-          'second.js          '
+          'second.js          \n'
         ].join('\n'))
         t.end()
       })
@@ -183,7 +183,7 @@ test('.cli', function (t) {
         'Pending migrations',
         '------------------',
         'first.js          ',
-        'second.js         '
+        'second.js         \n'
       ].join('\n'))
       t.end()
     })

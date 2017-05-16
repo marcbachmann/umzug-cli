@@ -14,7 +14,7 @@
   "author": "Marc Bachmann <marc.brookman@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "borderless-table": "^1.0.1",
+    "borderless-table": "^2.0.0",
     "umzug": "^2.0.0",
     "yargs-parser": "^7.0.0"
   },
