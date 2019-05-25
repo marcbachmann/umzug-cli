@@ -21,7 +21,7 @@
   "devDependencies": {
     "rimraf": "^2.6.1",
     "standard": "^10.0.2",
-    "tape": "^4.6.3"
+    "tape": "^4.10.2"
   },
   "directories": {
     "test": "test"
