@@ -19,7 +19,7 @@
     "yargs-parser": "^7.0.0"
   },
   "devDependencies": {
-    "rimraf": "^2.6.1",
+    "rimraf": "^2.7.0",
     "standard": "^10.0.2",
     "tape": "^4.6.3"
   },
