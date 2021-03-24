@@ -4,7 +4,7 @@ const knexUmzugCli = require('../api')
 const util = require('util')
 const rimraf = require('rimraf').sync
 const mkdir = require('fs').mkdirSync
-const emptyMig = 'module.exports = {up: () => undefined, down: () => undefined}'
+const emptyMig = 'module.exports = {async up () {}, async down () {}}'
 rimraf(path.join(__dirname, 'migrations'))
 mkdir(path.join(__dirname, 'migrations'))
 
