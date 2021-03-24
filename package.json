@@ -10,7 +10,8 @@
   ],
   "scripts": {
     "test": "standard && node test",
-    "test:ci": "standard && node test"
+    "test:ci": "node test",
+    "lint": "standard"
   },
   "author": "Marc Bachmann <marc.brookman@gmail.com>",
   "license": "MIT",

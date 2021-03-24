@@ -1,0 +1,36 @@
+---
+kind: pipeline
+name: default
+
+clone:
+  depth: 50
+
+steps:
+- name: install
+  image: node:14-alpine
+  commands: ["npm install"]
+
+- name: standard
+  image: node:14-alpine
+  commands: ["npm run lint -s"]
+
+- name: test-node-12
+  image: node:12-alpine
+  commands: ["npm run test:ci -s"]
+
+- name: test-node-14
+  image: node:14-alpine
+  commands: ["npm run test:ci -s"]
+
+- name: publish
+  image: livingdocs/semantic-release:v1.0.0
+  environment:
+    GH_TOKEN:
+      from_secret: GH_TOKEN
+    NPM_TOKEN:
+      from_secret: NPM_TOKEN
+---
+kind: signature
+hmac: 90328c22bc1b8c1b7789a34e02d0f50071edb908aeb8e3a9e2f2509a0116e043
+
+...
