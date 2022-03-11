@@ -1,6 +1,7 @@
 const path = require('path')
 const test = require('tape')
 const knexUmzugCli = require('../api')
+const { JSONStorage } = require('umzug/lib/storage/json')
 const util = require('util')
 const rimraf = require('rimraf').sync
 const mkdir = require('fs').mkdirSync
@@ -10,7 +11,7 @@ mkdir(path.join(__dirname, 'migrations'))
 
 test('api', function (t) {
   t.plan(5)
-  const api = knexUmzugCli({})
+  const api = createMigration('migrations/test-api').api
 
   t.test('exposes a .up command', function (t) {
     t.plan(1)
@@ -55,7 +56,7 @@ test('.up', function (t) {
     mig.create('second.js', emptyMig)
     mig.api.up().then(function () {
       t.equal(mig.stdout.pop(), [
-        `Executed 'up' of 2 migrations`,
+        'Executed \'up\' of 2 migrations',
         '-----------------------------',
         'first.js                     ',
         'second.js                    \n'
@@ -86,14 +87,14 @@ test('.down', function (t) {
       mig.api.down().then(function () {
         const lines = mig.stdout.pop()
         t.equal(lines, [
-          `Executed 'down' of 1 migrations`,
+          'Executed \'down\' of 1 migrations',
           '-------------------------------',
           'second.js                      \n'
         ].join('\n'))
 
         mig.api.down().then(function () {
           t.equal(mig.stdout.pop(), [
-            `Executed 'down' of 1 migrations`,
+            'Executed \'down\' of 1 migrations',
             '-------------------------------',
             'first.js                       \n'
           ].join('\n'))
@@ -194,13 +195,14 @@ function createMigration (directory) {
   const migdir = path.join(__dirname, directory)
   const stdout = new BufferStream()
   const api = knexUmzugCli({
-    cli: {stdout: stdout},
+    cli: { stdout: stdout },
+    debug: true,
     migrations: {
-      path: migdir,
-      pattern: /\.js$/
+      glob: path.join(migdir, '*.js')
     },
-    storage: 'json',
-    storageOptions: {path: path.join(migdir, 'state.json')}
+    storage: new JSONStorage({
+      path: path.join(migdir, 'state.json')
+    })
   })
   mkdir(migdir)
   return {

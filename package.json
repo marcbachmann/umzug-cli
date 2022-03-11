@@ -17,13 +17,13 @@
   "license": "MIT",
   "dependencies": {
     "borderless-table": "^2.0.0",
-    "umzug": "^2.3.0",
-    "yargs-parser": "^20.2.7"
+    "umzug": "^3.0.0",
+    "yargs-parser": "^21.0.1"
   },
   "devDependencies": {
-    "rimraf": "^2.6.1",
-    "standard": "^10.0.2",
-    "tape": "^4.6.3"
+    "rimraf": "^2.7.1",
+    "standard": "^16.0.4",
+    "tape": "^5.5.2"
   },
   "directories": {
     "test": "test"
