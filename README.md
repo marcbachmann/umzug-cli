@@ -31,7 +31,6 @@ Umzug now has a built-in library. So the use of this module is discouraged.
     down                   migrates 1 migration down
     up [file-to-migrate]   migrates a specific file up
     down [file-to-migrate] migrates a specific file down
-    execute [direction] [files-to-migrate] migrates a specific file
     pending                shows all pending migrations
     history                shows the migration history
   ```
