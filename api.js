@@ -39,6 +39,7 @@ module.exports = function (opts) {
 
 function createApi (stdout, umzug) {
   return {
+    umzug,
     async history () {
       if (typeof umzug.storage.history === 'function') {
         const events = await umzug.storage.history()
