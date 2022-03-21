@@ -43,7 +43,7 @@ function createApi (stdout, umzug) {
     async history () {
       if (typeof umzug.storage.history === 'function') {
         const events = await umzug.storage.history()
-        if (!events.length) stdout.write('No executed migrations\n')
+        if (!events.length) return stdout.write('No executed migrations\n')
         const lines = events.map(function (e) {
           const time = new Date(e.time).toLocaleTimeString('en-us', { year: 'numeric', month: 'numeric', day: 'numeric' })
           return Object.assign(e, { time: time })
